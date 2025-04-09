@@ -1,0 +1,46 @@
+.pdp-tabs input[type="radio"] {
+    display: none;
+  }
+  
+.tab-labels {
+display: flex;
+}
+
+.tab-labels label {
+padding: 10px 20px;
+cursor: pointer;
+background-color: #f5f5f5;
+border: 1px solid #d2d2d2;
+border-bottom: none;
+border-radius: 4px 4px 0 0;
+margin-right: 5px;
+}
+
+.tab-content {
+display: none;
+border: 1px solid #d2d2d2;
+padding: 20px;
+background: white;
+border-radius: 0 4px 4px 4px;
+}
+  
+
+#tab-one:checked ~ .tab-content.tab-one,
+#tab-two:checked ~ .tab-content.tab-two,
+#tab-three:checked ~ .tab-content.tab-three {
+display: block;
+}
+
+#tab-one:checked ~ .tab-labels label[for="tab-one"],
+#tab-two:checked ~ .tab-labels label[for="tab-two"],
+#tab-three:checked ~ .tab-labels label[for="tab-three"] {
+background-color: white;
+border-bottom: 1px solid white;
+font-weight: bold;
+}
+
+/* .apply-button {
+    margin-top: 20px;
+} */
+
+  

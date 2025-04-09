@@ -1,0 +1,224 @@
+
+@font-face {
+    font-family: "Jano";
+    src: url("Jano_Sans_Pro_Regular.otf");
+  }
+  body{
+    padding: 50px;
+    background-color: #ebeded;
+    font-family: "Jano";
+  }
+  table {
+    border-spacing: 0;
+    width: 100%;
+    }
+    th {
+    background: linear-gradient(#2c3947, #2c3947);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    color: #2c3947;
+    padding: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    }
+    th:first-child {
+    border-top-left-radius: 4px;
+    border-left: 0;
+    }
+    th:last-child {
+    border-top-right-radius: 4px;
+    border-right: 0;
+    }
+    td {
+    border-right: 1px solid #c6c9cc;
+    border-bottom: 1px solid #c6c9cc;
+    padding: 10px;
+    }
+    td:first-child {
+    border-left: 1px solid #c6c9cc;
+    }
+    tr:first-child td {
+    border-top: 0;
+    }
+    tr:nth-child(even) td {
+    background: #8d9fb0;
+    }
+    tr:last-child td:first-child {
+    border-bottom-left-radius: 4px;
+    }
+    tr:last-child td:last-child {
+    border-bottom-right-radius: 4px;
+    }
+  
+    .pf-c-page__main-section{
+        text-align: center;
+    }
+  
+    tbody tr{
+        text-align: center;
+    }
+  
+    td img{
+        width: 60px;
+        height: 60px;
+    }
+  
+    .pdp-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+     
+      label {
+        background: #8d9fb0;
+        padding: .7em 1em;
+        cursor: pointer;
+        padding-left: 50px;
+        padding-right: 50px;
+      }
+     
+      .pdp-tab-content {
+        width: 100%;
+        padding: 1em;
+        order: 1;
+        background: #ddd;
+      }
+      input[type=radio], .pdp-tab-content {
+        display: none;
+      }
+      input[type=radio]:checked + label {
+        background: #2c3947;
+        color: #fff;
+        padding-left: 50px;
+        padding-right: 50px;
+        font-weight: bold;
+      }
+      input[type=radio]:checked + label + .pdp-tab-content {
+        display: block;
+      }
+      .pdp-tab-content h1{
+        text-align: center;
+        font-size: 23px;
+      }    
+  
+    
+  .container-summary{
+    width: 100%;
+    height: 200px;
+  }
+  
+  .lateral-box{
+    width: 15%;
+    height: -webkit-fill-available;
+    text-align: center;
+  }
+  
+  .lateral-box h3{
+    color: #2c3947;
+    font-size: 28px;
+  }
+  
+  .lateral-box h4{
+    color: #000;
+    font-size: 50px;
+    margin:0;
+  }
+  
+  .box-2{
+    width: 70%;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    border-left: 1px solid #2c3947;
+    border-right: 1px solid #2c3947;
+  }
+  
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .box-3{
+    width: 15%;
+    background-color: green;
+    height: -webkit-fill-available;
+  }
+  
+  .container-summary{
+    display: flex;
+  }
+  
+  .row-event{
+    width: 100%;
+    padding-bottom: 5px;
+  }
+  
+  .child-event{
+    height: 100px;
+    padding: 5px;
+    border-radius: 10px;
+    line-height: 50px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .row-event{
+    --n: 4; /* The maximum number of columns */
+    display: grid;
+    grid-template-columns: repeat(auto-fill,
+    minmax(max(150px,(100% - (var(--n) - 1)*10px)/var(--n)), 1fr));
+    gap: 10px;
+  }
+  
+  h5, h6{
+    margin: 0;
+  }
+  
+  h5{
+    font-size: 22px;
+    color: #2c3947;
+  }
+  
+  h6{
+    font-size: 20px;
+    color: #000;
+  }
+
+  .child-event{
+    height: 100px;
+    padding: 5px;
+    border-radius: 10px;
+    line-height: 50px;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+  }
+  
+  .row-event{
+    --n: 5; /* The maximum number of columns */
+    display: grid;
+    grid-template-columns: repeat(auto-fill,
+    minmax(max(150px,(100% - (var(--n) - 1)*10px)/var(--n)), 1fr));
+    gap: 10px;
+  }
+
+  .box-2{
+    width: 100%;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    border-left: 1px solid #2c3947;
+    border-right: 1px solid #2c3947;
+  }
+
+  .invisible{
+    display: none;
+  }
+
+  .visible{
+    display: block;
+  }
+
+  .images-buffer{
+    width:130px;
+    height:130px;
+    border-radius: 15px;
+  }

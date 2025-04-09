@@ -1,0 +1,109 @@
+<head>
+    <title>Custom app manager</title>
+    <meta charset="utf-8">
+    <link href="apps.css" type="text/css" rel="stylesheet">
+    <link href="inputs_designe.css" type="text/css" rel="stylesheet">
+    <link href="table.css" type="text/css" rel="stylesheet">
+    <script src="../base1/cockpit.js"></script>
+    <script src="jquery.js" type="text/javascript"></script>
+    <script src="files.js" type="text/javascript"></script>
+  </head>
+  <body class="pf-m-redhat-font">
+    <div class="ct-page-fill">
+       <div class="pf-c-page">
+          <main class="pf-c-page__main" tabindex="-1">
+             <section class="pf-c-page__main-section pf-m-light">
+                <h2>Onvif Config</h2>
+                <p>Application settings and camera testing</p>
+                <br>
+                <hr>
+                <br>
+             </section>
+             <section>
+                <article>
+                   <div class="pdp-tabs">
+                      <input id="tab-one" type="radio" name="grp" checked="checked" />
+                      <label for="tab-one">Onvif Config</label>
+                      <div class="pdp-tab-content">
+                         <h1>Onvif Config</h1>
+                         <section class="pf-c-page__main-section">
+                            <div class="pf-l-gallery pf-m-gutter">
+                                <article id="adu-provision" class="pf-c-card">
+                                    <div class="pf-l-flex pf-m-align-items-center">
+                                        <div class="pf-c-card__body"> 
+                                            <div class="pf-l-stack__item">
+                                                <div id="container">
+        
+                                                </div>
+                                                <button class="pf-c-button pf-m-primary" id="submit-button">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <br> 
+                            </div>
+                        </section>
+                      </div>
+                      <input id="tab-two" type="radio" name="grp" />
+                      <label for="tab-two">Snapshot Testing</label>
+                      <div class="pdp-tab-content">
+                         <h1>Snapshot Testing</h1>
+                         <section class="pf-c-page__main-section">
+                           <div class="pf-l-gallery pf-m-gutter">
+                               <article id="adu-provision" class="pf-c-card">
+                                   <div class="pf-l-flex pf-m-align-items-center">
+                                       <div class="pf-c-card__body"> 
+                                          <div class="pf-l-stack__item">
+                                             <button class="pf-c-button pf-m-primary" id="request-image-btn">Request Image</button>
+                                          </div>
+                                          <br>
+                                          <img id="img-test" width="200px" height="200px">
+                                       </div>
+                                   </div>
+                               </article>
+                               <br> 
+                           </div>
+                       </section>
+                     </div>
+
+
+                     <input id="tab-three" type="radio" name="grp" />
+                      <label for="tab-three">Buffer Testing</label>
+                      <div class="pdp-tab-content">
+                         <h1>Buffer Testing</h1>
+                         <section class="pf-c-page__main-section">
+                           <div class="pf-l-gallery pf-m-gutter">
+                               <article id="adu-provision" class="pf-c-card">
+                                   <div class="pf-l-flex pf-m-align-items-center">
+                                       <div class="pf-c-card__body"> 
+                                          <div class="pf-l-stack__item">
+                                             <button class="pf-c-button pf-m-primary" id="request-buffer-btn">Request Buffer</button>
+                                             <div class="box-2 invisible" id="content-buffer">
+                                                <div class="row-event" id="row-event">
+
+                                                </div>
+                                             </div>
+
+                                             <div id="content-wait" class="invisible">
+                                                <h1>Requesting Buffer, please wait ...</h1>
+                                             </div>
+
+                                          </div>
+                                          <br>
+                                          
+                                       </div>
+                                   </div>
+                               </article>
+                               <br> 
+                           </div>
+                       </section>
+                     </div>
+                   </div>
+                </article>
+             </section>
+          </main>
+       </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+  </html>
