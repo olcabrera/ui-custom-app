@@ -98,3 +98,17 @@ margin-right: 10%;
 .label-switch input:checked + .slider:before {
   transform: translateX(18px);
 }
+
+.config-file-section {
+  margin-top: 30px;
+}
+
+.config-title {
+  font-size: 10px;
+  margin-bottom: 12px;
+}
+
+.config-buttons {
+  display: flex;
+  gap: 12px;
+}

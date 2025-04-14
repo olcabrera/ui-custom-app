@@ -4,17 +4,17 @@ const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.
 
 
 function loadVersionsFile() {
-    alert("🔄 Refreshing Custom apps...");
+    alert("Refreshing Custom apps...");
     cockpit.file(versions_file).read()
       .then(content => {
         console.log("Contenido leído desde archivo:", content);
         processFile(content);
-        alert("✅ Custom Apps recharged succesfully.");
+        alert("Custom Apps recharged succesfully.");
       })
       
       .catch(error => {
         console.error("Error al leer archivo:", error);
-        alert("❌ Error while refreshing custom apps.");
+        alert("Error while refreshing custom apps.");
       });
   }
   
@@ -72,15 +72,13 @@ function renderizarAplicaciones(apps) {
       item.style.alignItems = 'center';
       item.style.gap = '12px';
 
-      // === Label-switch personalizado ===
       const switchWrapper = document.createElement('label');
       switchWrapper.className = 'label-switch';
   
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.id = `chk-${nombre}`;
-  
-      // El "slider" visual del interruptor
+
       const slider = document.createElement('span');
       slider.className = 'slider';
 
@@ -133,11 +131,43 @@ function renderizarAplicaciones(apps) {
       contenedor.appendChild(item);
     });
   }
+
+
+function downloadConfig() {
+  alert("Downloading config file...");
+
+  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/download-zip-config"])
+    .done(function (output) {
+      console.log("Response:", output);
+      alert("Config file uploaded successfully");
+    })
+    .fail(function (error) {
+      console.error("Error downloading config file:", error);
+      alert("Error in downloading config file");
+    });
+}
+
+function uploadConfig() {
+  alert("Uploading config file");
+
+  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/run-zip-upload"])
+    .done(function (output) {
+      console.log("Response:", output);
+      alert("Config file uploaded successfully");
+    })
+    .fail(function (error) {
+      console.error("Error uploading config file:", error);
+      alert("Error uploading config file");
+    });
+
+}
+  
   
 
 // window.addEventListener('DOMContentLoaded', loadVersionsFile);
 window.addEventListener('DOMContentLoaded', () => {
     loadActiveApps().then(loadVersionsFile);
     document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
+    document.getElementById("download-button").addEventListener("click", downloadConfig);
+    document.getElementById("upload-button").addEventListener("click", uploadConfig);
   });
-
