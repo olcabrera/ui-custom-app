@@ -4,8 +4,9 @@
     <title>App Selection</title>
     <meta charset="UTF-8">
     <link href="apps.css" type="text/css" rel="stylesheet">
-    <link href="tabs.css" type="text/css" rel="stylesheet">
     <link href="inputs_designe.css" type="text/css" rel="stylesheet">
+    <link href="table.css" type="text/css" rel="stylesheet">
+    <link href="tabs.css" type="text/css" rel="stylesheet">
     <script src="mqttws31.min.js"></script>
     <script src="mqtt_client.js"></script>
     <script src="index.js"></script>
@@ -78,7 +79,41 @@
                                                     </button>
                                                   </div>
                                                   
-                                                <div id="app-lista" class="pf-l-stack"></div>
+                                                <div id="app-lista" class="pf-l-stack">
+                                                    <div class="item" id="item-Test" style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
+                                                        <label class="label-switch">
+                                                            <input type="checkbox" id="chk-Test">
+                                                            <span class="slider"></span>
+                                                        </label>
+
+                                                        <label class="app-name" style="margin-right: 20px; font-size: 15px;">Test</label>
+                                                        
+                                                        <select class="dropdown" id="ddl-Test">
+                                                            <option value="v0.1">v0.1</option>
+                                                            <option value="v0.2" selected true>v0.2</option>
+                                                        </select>
+
+                                                    </div>
+
+                                                    <div class="item" id="item-test2" style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
+                                                        <label class="label-switch">
+                                                            <input type="checkbox" id="chk-Test2">
+                                                            <span class="slider"></span>
+                                                        </label>
+
+                                                        <label class="app-name" style="margin-right: 20px; font-size: 15px;">Test2</label>
+                                                        
+                                                        <select class="dropdown" id="ddl-Test2">
+                                                            <option value="v1.1" selected true>v1.1</option>
+                                                            <option value="v1.2">v1.2</option>
+                                                        </select>
+
+                                                    </div>
+                                        
+
+
+
+                                                </div>
 
                                                 <div style="text-align: center; margin-top: 20px;">
                                                     
@@ -116,7 +151,16 @@
                                         <div class="pf-l-flex pf-m-align-items-center">
                                             <section class="pf-c-page__main-section">
                                                 <!-- <h2>Lista de Resultados</h2> -->
-                                                <div id="resultado-lista" class="pf-c-list"></div>
+                                                
+                                                <div class="config-buttons">
+                                                    <button class="pf-c-button pf-m-primary" id="list-apps-button">List</button>
+                                                    <button class="pf-c-button pf-m-secondary" id="clear-apps-button">Clear</button>
+
+                                                </div>
+                                                
+                                                <div id="app-list-result" class="pf-c-list">
+                                                    
+                                                </div>
                                             </section>
                                         </div>
                                     </article>

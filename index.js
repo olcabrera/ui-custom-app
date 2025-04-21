@@ -4,9 +4,10 @@ const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.
 
 
 function loadVersionsFile() {
-    alert("Refreshing Custom apps...");
+    // alert("Refreshing Custom apps...");
     cockpit.file(versions_file).read()
       .then(content => {
+        //content='692a2da45cd861c67a54cde1d0ae00be  ./storeops-custom-application/storeops-custom-application:v2.0.3-beta.21'
         console.log("Contenido leído desde archivo:", content);
         processFile(content);
         alert("Custom Apps recharged succesfully.");
@@ -28,12 +29,12 @@ function processFile(texto) {
 
         const nombre = match[1];
         const version = match[2];
-
         if (!apps[nombre]) apps[nombre] = [];
         apps[nombre].push(version);
     });
-
+    
     estadoActual.forEach(entry => {
+      
         const [nombre, version] = entry.split(":");
         if (!apps[nombre]) {
           apps[nombre] = [version];
@@ -56,80 +57,55 @@ function loadActiveApps() {
         estadoActual = [];
       });
   }
+
+
   
   
 
 function renderizarAplicaciones(apps) {
-    console.log("Renderizando apps:", apps);
-    const contenedor = document.getElementById('app-lista');
-    contenedor.innerHTML = '';
   
-    Object.entries(apps).forEach(([nombre, versiones]) => {
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.style.marginBottom = '15px';
-      item.style.display = 'flex';
-      item.style.alignItems = 'center';
-      item.style.gap = '12px';
+  const container = document.getElementById("app-lista");
+  container.innerHTML= ''
+  var elements_html=''
+  Object.entries(apps).forEach(([nombre, versiones]) => { 
 
-      const switchWrapper = document.createElement('label');
-      switchWrapper.className = 'label-switch';
-  
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = `chk-${nombre}`;
-
-      const slider = document.createElement('span');
-      slider.className = 'slider';
-
-      switchWrapper.appendChild(checkbox);
-      switchWrapper.appendChild(slider);
-  
-
-      const appLabel = document.createElement('label');
-      appLabel.textContent = nombre;
-      appLabel.style.marginRight = '20px';
-      appLabel.style.fontSize = '15px';
-      appLabel.className = 'app-name';
-
-      
-
-      const select = document.createElement('select');
-      select.className = 'dropdown';
-
-      let appActiva = null;
-      versiones.forEach(version => {
-        const clave = `${nombre}:${version}`;
-        if (estadoActual.includes(clave)) {
-            appActiva = version;
-        }
-      });
-
-
-    //   versiones.forEach(version => {
-    //     const clave = `${nombre}:${version}`;
-    //     if (estadoActual.includes(clave)) {
-    //       appActiva = version;
-    //     }
-    //   });
-
-      checkbox.checked = !!appActiva;
-  
-      versiones.forEach(version => {
-        const option = document.createElement('option');
-        option.value = version;
-        option.textContent = version;
-        if (version === appActiva) {
-            option.selected = true;
-          }
-        select.appendChild(option);
-      });
-  
-      item.appendChild(switchWrapper);
-      item.appendChild(appLabel);
-      item.appendChild(select);
-      contenedor.appendChild(item);
+    let appActiva = null;
+    versiones.forEach(version => {
+     const clave = `${nombre}:${version}`;
+     if (estadoActual.includes(clave)) {
+          appActiva = version;
+               
+      }
     });
+    if(appActiva!=null){
+      elements_html+="<tr><td><input class='input-s' type='checkbox' id='chk-"+nombre+"' checked/>" 
+    }
+    else{
+      elements_html+="<tr><td><input class='input-s' type='checkbox' id='chk-"+nombre+"'/>"      
+    }
+
+    
+    elements_html+="<label class='label' for='chk-"+nombre+"'></label></td>"
+
+    elements_html+="<td><h3 class='label-switch'>"+nombre+"</h3></td>"
+
+    elements_html+="<td><select class='dropdown' id='ddl-"+nombre+"'>"
+                                                                
+  
+    versiones.forEach(version => {
+      if (version === appActiva) {
+        elements_html+="<option value='"+version+"' selected>"+version+"</option>"
+      }
+      else{
+        elements_html+="<option value='"+version+"'>"+version+"</option>"
+      }
+    });
+
+    elements_html+="</select></td></tr>"
+
+    });
+
+    container.innerHTML= elements_html
   }
 
 
@@ -162,12 +138,85 @@ function uploadConfig() {
 
 }
   
-  
+function getlistCustomApps(){
+  var topic_message= "command/cockpit_ui/custom_manager";
+  var mqttMessage = new Paho.MQTT.Message('{"uuid": 1, "command_id": "get_custom_app_manager_status", "destination": "", "version": "1.0", "data": []}');
+  mqttMessage.destinationName = topic_message;
+  mqttClient.send(mqttMessage);
+}
 
-// window.addEventListener('DOMContentLoaded', loadVersionsFile);
+
+function printStatusApps(payload){
+  const container = document.getElementById("app-list-result");
+  container.innerHTML= ''
+  var elements_html=''
+  elements_html+= '<p class="app-list-title">Checking Custom Application List....</p><br><table class="table-custom-apps">'
+  elements_html+=' <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th></thead><tbody>'
+  
+  payload.forEach(item => {
+    var custom_app= item["data"][0]["value"].toString().replace("checkpt/","")
+    var version_app= item["data"][1]["value"].toString()
+    var status_app= item["data"][2]["value"].toString()
+    var cpu= parseFloat(item["data"][4]["value"].toString()).toFixed(2)
+
+    elements_html+='<tr><td>'+custom_app+'</td><td>'+version_app+'</td><td>'+status_app+'</td><td>'+cpu+'%</td></tr>'
+  });
+
+  elements_html+='</tbody></table>'
+  container.innerHTML= elements_html
+}
+
+function clearlistCustomApps(){
+  const container = document.getElementById("app-list-result");
+  container.innerHTML= ''
+}
+
+function setSaveApplicattions(){
+  var topic_message= "command/cockpit_ui/custom_manager";
+  var message='{"uuid": 1, "command_id": "set_custom_app_manager_app", "destination": "", "version": "1.0", "data": [{"key": "action", "type": "string", "value": ["set"]}, {"key": "custom_app", "type": "json", "value":['
+  var cont_custom_apps=0
+
+  $('#app-lista input,select').each(function () {
+    var id_item= this.id
+    var name_app= id_item.replace('chk-','')
+    if(id_item.includes('chk-')){
+      if($(this).is(':checked')){
+        var version_app= document.getElementById('ddl-'+name_app).value
+        if(cont_custom_apps==0){
+          message+='{"name":"'+name_app+'","version":"'+version_app+'"}'
+        }
+        else{
+          message+=',{"name":"'+name_app+'","version":"'+version_app+'"}'
+        }
+        cont_custom_apps++;
+      }
+    }
+  
+    
+  })
+ 
+  message+=']}]}'
+  if(cont_custom_apps>0){
+    alert(message)
+    var mqttMessage = new Paho.MQTT.Message(message);
+    mqttMessage.destinationName = topic_message;
+    mqttClient.send(mqttMessage);
+    alert('Apps updated')
+  }
+  else{
+    alert('Please, select at least one custom application')
+  }
+}
+
+
+
 window.addEventListener('DOMContentLoaded', () => {
     loadActiveApps().then(loadVersionsFile);
+    connectMQTT()
     document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
-    document.getElementById("download-button").addEventListener("click", downloadConfig);
-    document.getElementById("upload-button").addEventListener("click", uploadConfig);
-  });
+    // document.getElementById("download-button").addEventListener("click", downloadConfig);
+    //document.getElementById("upload-button").addEventListener("click", uploadConfig);
+    document.getElementById("list-apps-button").addEventListener("click", getlistCustomApps);
+    document.getElementById("clear-apps-button").addEventListener("click", clearlistCustomApps);
+    document.getElementById("apply-button").addEventListener("click", setSaveApplicattions);
+});

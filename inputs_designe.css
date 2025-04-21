@@ -59,6 +59,7 @@ margin-right: 10%;
   display: inline-block;
   width: 42px;
   height: 24px;
+  width: 100%;
 }
 
 .label-switch input {
@@ -111,4 +112,30 @@ margin-right: 10%;
 .config-buttons {
   display: flex;
   gap: 12px;
+}
+
+
+#app-list-result{
+  margin-top: 20px;
+}
+
+.app-list-title{
+  font-size: 13px;
+  float: left;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+.table-custom-apps{
+  width: 100%;
+  font-size: 14px;
+}
+
+.table-custom-apps thead tr th{
+  border-bottom: 1px solid;
+  padding: 2px;
+}
+
+.table-custom-apps tbody tr td{
+  padding: 8px;
 }
