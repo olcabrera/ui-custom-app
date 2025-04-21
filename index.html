@@ -1,56 +1,46 @@
-<!-- <!DOCTYPE html>
-<html lang="es"> -->
+
+
 <head>
-    <title>App Selection</title>
-    <meta charset="UTF-8">
+    <title>Onvif Config</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
     <link href="apps.css" type="text/css" rel="stylesheet">
     <link href="inputs_designe.css" type="text/css" rel="stylesheet">
     <link href="table.css" type="text/css" rel="stylesheet">
-    <link href="tabs.css" type="text/css" rel="stylesheet">
-    <script src="mqttws31.min.js"></script>
-    <script src="mqtt_client.js"></script>
-    <script src="index.js"></script>
     <script src="../base1/cockpit.js"></script>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="files.js" type="text/javascript"></script>
-
-</head>
-<body class="pf-m-redhat-font">
+    <script src="mqttws31.min.js"></script>
+    <script src="mqtt_client.js"></script>
+    <script src="index.js"></script>
+  </head>
+  <body class="pf-m-redhat-font">
     <div class="ct-page-fill">
-        <div class="pf-c-page">    
-            <main class="pf-c-page__main" tabindex="-1">
-                <section class="pf-c-page__main-section pf-m-light">
-                <h2 style="text-align: center;">Custom App Selection</h2>
+       <div class="pf-c-page">
+          <main class="pf-c-page__main" tabindex="-1">
+             <section class="pf-c-page__main-section pf-m-light">
+                <h2>Custom App Selection</h2>
                 <!-- <p>Select custom apps to install</p> -->
                 <br>
                 <hr>
-                <br>
-                </section>
-                <section>
+             </section>
+             <section>
                 <article>
-                    <div class="pdp-tabs">
-                        <input id="tab-one" type="radio" name="grp" checked />
-                        <input id="tab-two" type="radio" name="grp" />
-                        <input id="tab-three" type="radio" name="grp" />
+                   <div class="pdp-tabs">
+                      <input id="tab-one" type="radio" name="grp" checked="checked" />
+                      <label for="tab-one">Select</label>
+                      <div class="pdp-tab-content">
+                         <h1>Select Custom Apps</h1>
+                         <section class="pf-c-page__main-section">
+                            <div class="pf-l-gallery pf-m-gutter">
+                                <article id="adu-provision" class="pf-c-card">
+                                    <div class="pf-l-flex pf-m-align-items-center">
+                                        <div class="pf-c-card__body"> 
+                                            <div class="pf-l-stack__item">
 
-                        <div class="tab-labels">
-                            <label for="tab-one">Select</label>
-                            <label for="tab-two">Active</label>
-                            <label for="tab-three">Downloading</label>
-                        </div>
-
-                        <!-- <input id="tab-one"  type="radio" name="grp" checked="checked" /> -->
-                        <!-- <label for="tab-one">Select</label> -->
-                        <div class="tab-content tab-one">
-                            <h1>Select Custom Apps</h1>
-                            <!-- <div id="app-lista" class="pf-c-page__main-section"> -->
-                            <section class="pf-c-page__main-section">
-                                <div class="pf-l-gallery pf-m-gutter">
-                                    <article id="adu-provision" class="pf-c-card">
-                                        <div class="pf-l-flex pf-m-align-items-center">
-                                            <div class="pf-c-card__body">
-                                                  
-                                                <div style="display: flex; justify-content: flex-end; align-items: left; margin-bottom: 10px;">
+                                                <div class="button-refresh-box">
                                                     <button class="pf-c-button pf-m-plain" id="refresh-button" aria-label="Refresh">
                                                         <!-- <button class="pf-c-button pf-m-plain" id="refresh-button" aria-label="Refresh"> -->
                                                             <svg class="icon-refresh" xmlns="http://www.w3.org/2000/svg"
@@ -78,151 +68,122 @@
 
                                                     </button>
                                                   </div>
-                                                  
-                                                <div id="app-lista" class="pf-l-stack">
-                                                    <div class="item" id="item-Test" style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
-                                                        <label class="label-switch">
-                                                            <input type="checkbox" id="chk-Test">
-                                                            <span class="slider"></span>
-                                                        </label>
 
-                                                        <label class="app-name" style="margin-right: 20px; font-size: 15px;">Test</label>
-                                                        
-                                                        <select class="dropdown" id="ddl-Test">
-                                                            <option value="v0.1">v0.1</option>
-                                                            <option value="v0.2" selected true>v0.2</option>
-                                                        </select>
+                                                <div class="pf-l-stack">
+                                                    <table>
+                                                        <thead>
+                                                            <th class="cell-status">Status</th>
+                                                            <th class="cell-app">Custom App</th>
+                                                            <th class="cell-version">Version</th>
+                                                        </thead>
+                                                        <tbody id="app-lista">
+                                                            <!-- <tr>
+                                                                <td>
+                                                                    <input class="input-s" type="checkbox" id="chk-Onvif-Custom-Application" checked />
+                                                                    <label class="label" for="chk-Onvif-Custom-Application"></label>
+                                                                </td>
+                                                                <td>
+                                                                    <h3 class="label-switch">Onvif-Custom-Application</h3>
+                                                                </td>  
+                                                                <td>
+                                                                    <select class="dropdown" id="ddl-Onvif-Custom-Application">
+                                                                        <option value="v0.1">v0.1</option>
+                                                                        <option value="v0.2" selected>v0.2</option>
+                                                                    </select>
+                                                                </td>          
+                                                            </tr>
 
-                                                    </div>
-
-                                                    <div class="item" id="item-test2" style="margin-bottom: 15px; display: flex; align-items: center; gap: 12px;">
-                                                        <label class="label-switch">
-                                                            <input type="checkbox" id="chk-Test2">
-                                                            <span class="slider"></span>
-                                                        </label>
-
-                                                        <label class="app-name" style="margin-right: 20px; font-size: 15px;">Test2</label>
-                                                        
-                                                        <select class="dropdown" id="ddl-Test2">
-                                                            <option value="v1.1" selected true>v1.1</option>
-                                                            <option value="v1.2">v1.2</option>
-                                                        </select>
-
-                                                    </div>
-                                        
-
-
+                                                            <tr>
+                                                                <td>
+                                                                    <input class="input-s" type="checkbox" id="chk-Storeops-Custom-Application" checked />
+                                                                    <label class="label" for="chk-Storeops-Custom-Application"></label>
+                                                                </td>
+                                                                <td>
+                                                                    <h3 class="label-switch">Storeops-Custom-Application</h3>
+                                                                </td>  
+                                                                <td>
+                                                                    <select class="dropdown" id="ddl-Storeops-Custom-Application">
+                                                                        <option value="v1.1">v1.1</option>
+                                                                        <option value="v1.2" selected true>v1.2</option>
+                                                                    </select>
+                                                                </td>          
+                                                            </tr> -->
+                                                        </tbody>
+                                                    </table>
+                                                   
 
                                                 </div>
+                                                <button class="pf-c-button pf-m-primary" id="apply-button">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <br> 
+                            </div>
+                        </section>
+                      </div>
+                      <input id="tab-two" type="radio" name="grp" />
+                      <label for="tab-two">Active</label>
+                      <div class="pdp-tab-content">
+                         <h1>Active</h1>
+                         <section class="pf-c-page__main-section">
+                           <div class="pf-l-gallery pf-m-gutter">
+                               <article id="adu-provision" class="pf-c-card">
+                                   <div class="pf-l-flex pf-m-align-items-center">
+                                       <div class="pf-c-card__body"> 
+                                        <section class="pf-c-page__main-section pf-m-light">
+                                            
+                                            <div class="config-buttons">
+                                                <button class="pf-c-button pf-m-primary" id="list-apps-button">List</button>
+                                                <button class="pf-c-button pf-m-secondary" id="clear-apps-button">Clear</button>
 
-                                                <div style="text-align: center; margin-top: 20px;">
-                                                    
-                                                    <button class="pf-c-button pf-m-primary" id="apply-button">Apply</button>
-                                                </div>
-
-                                                <div class="config-file-section">
-                                                    <h2 class="config-title">Config File</h2>
-                                                    <div class="config-buttons">
-                                                      <button class="pf-c-button pf-m-primary" id="download-button">Download</button>
-                                                      <button class="pf-c-button pf-m-primary" id="upload-button">Upload</button>
-                                                    </div>
-                                                </div>
-                                                
                                             </div>
                                             
-                                        </div>
-                                        
-                                    </article>
-                                    <br>
-                                    <br> 
-                                </div>
-                            </section>
-                        </div>
-
-                        <div class="tab-content tab-two">
-
-                        <!-- <input id="tab-two" type="radio" name="grp" />
-                        <label for="tab-two">Active</label>
-                        <div class="pdp-tab-content"> -->
-                            <h1>Custom apps Active</h1>
-                            <section class="pf-c-page__main-section">
-                                <div class="pf-l-gallery pf-m-gutter">
-                                    <article id="adu-provision" class="pf-c-card">
-                                        <div class="pf-l-flex pf-m-align-items-center">
-                                            <section class="pf-c-page__main-section">
-                                                <!-- <h2>Lista de Resultados</h2> -->
-                                                
-                                                <div class="config-buttons">
-                                                    <button class="pf-c-button pf-m-primary" id="list-apps-button">List</button>
-                                                    <button class="pf-c-button pf-m-secondary" id="clear-apps-button">Clear</button>
-
-                                                </div>
-                                                
-                                                <div id="app-list-result" class="pf-c-list">
-                                                    
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </article>
-                                    <br> 
-                                </div>
-                            </section>
-                        </div>
-
-
-                        <!-- <input id="tab-three" type="radio" name="grp" />
-                        <label for="tab-three">Downloading</label> -->
-                        <div class="tab-content tab-three">
-                            <h1>Downloaded</h1>
-                            <section class="pf-c-page__main-section">
-                                <div class="pf-l-gallery pf-m-gutter">
-                                    <article id="adu-provision" class="pf-c-card">
-                                        <div class="pf-l-flex pf-m-align-items-center">
-                                            <div class="pf-c-card__body"> 
-                                                <div class="pf-l-stack__item">
-                                    
-                                                </div>
-                                                <br>
+                                            <div id="app-list-result" class="pf-c-list">
                                                 
                                             </div>
-                                        </div>
-                                    </article>
-                                    <br> 
-                                </div>
-                            </section>
-                        </div>
-                    </div>
+                                         </section>
+                                       </div>
+                                   </div>
+                               </article>
+                               <br> 
+                           </div>
+                       </section>
+                     </div>
+
+
+
+                     <input id="tab-three" type="radio" name="grp" />
+                      <label for="tab-three">Downloaded</label>
+                      <div class="pdp-tab-content">
+                         <h1>Downloaded</h1>
+                         <section class="pf-c-page__main-section">
+                           <div class="pf-l-gallery pf-m-gutter">
+                               <article id="adu-provision" class="pf-c-card">
+                                   <div class="pf-l-flex pf-m-align-items-center">
+                                       <div class="pf-c-card__body"> 
+                                        <section class="pf-c-page__main-section pf-m-light">
+                                            
+                                            
+                                         </section>
+                                       </div>
+                                   </div>
+                               </article>
+                               <br> 
+                           </div>
+                       </section>
+                     </div>
+
+
+                     
+                   </div>
                 </article>
-                </section>
-            </main>
-        </div>
-    </div>
-    <script src="index.js"></script>
-</body>
-</html>
-                
-    <!-- <div id="app">
-        <div class="item">
-            <input type="checkbox" class="toggle" id="app1" checked>
-            <label for="app1">storeops-custom-application</label>
-            <select class="dropdown">
-                <option>v1.0.0</option>
-                <option>v1.1.0</option>
-                <option>v1.2.0</option>
-            </select>
-        </div>
-        <div class="item">
-            <input type="checkbox" class="toggle" id="app2">
-            <label for="app2">onvif-custom-application</label>
-            <select class="dropdown">
-                <option>v2.1.22</option>
-                <option>v2.2.0</option>
-                <option>v2.3.1</option>
-            </select>
-        </div>
+             </section>
+          </main>
+       </div>
     </div>
 
-    <button class="apply" onclick="saveSelection()">Apply</button> -->
+    
 
     <script>
         function saveSelection() {
@@ -251,5 +212,5 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
-    </body>
-    </html>
+  </body>
+  </html>

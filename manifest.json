@@ -3,7 +3,7 @@
     "tools": {
         "index": {
             "label": "Custom app manager",
-            "path": "test.html"
+            "path": "index.html"
         }
     },
     "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; connect-src 'self' https://cdnjs.cloudflare.com wss://*.checkpoint-device.com:9001"
