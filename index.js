@@ -2,9 +2,27 @@
 const versions_file = "/var/environment/custom_app_manager/custom_apps/versions.txt"
 const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.json";
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-function loadVersionsFile() {
+async function loadVersionsFile() {
     // alert("Refreshing Custom apps...");
+    
+    var table_apps= document.getElementById('table-apps');
+    var loader= document.getElementById('loader-1')
+    var btn_submit= document.getElementById('apply-button')
+
+    
+    table_apps.classList.remove("visible");
+    table_apps.classList.add("invisible");
+    btn_submit.classList.remove("visible-hidden");
+    btn_submit.classList.add("invisible-hidden");
+    loader.classList.add("visible");
+    loader.classList.remove("invisible");
+    
+    await sleep(1500)
+    
     cockpit.file(versions_file).read()
       .then(content => {
         //content='692a2da45cd861c67a54cde1d0ae00be  ./storeops-custom-application/storeops-custom-application:v2.0.3-beta.21'
@@ -17,6 +35,13 @@ function loadVersionsFile() {
         console.error("Error al leer archivo:", error);
         alert("Error while refreshing custom apps.");
       });
+
+      table_apps.classList.remove("invisible");
+      table_apps.classList.add("visible");
+      btn_submit.classList.remove("invisible-hidden");
+      btn_submit.classList.add("visible-hidden");
+      loader.classList.remove("visible");
+      loader.classList.add("invisible");
   }
   
 function processFile(texto) {
@@ -139,6 +164,7 @@ function uploadConfig() {
 }
   
 function getlistCustomApps(){
+  clearlistCustomApps()
   var topic_message= "command/cockpit_ui/custom_manager";
   var mqttMessage = new Paho.MQTT.Message('{"uuid": 1, "command_id": "get_custom_app_manager_status", "destination": "", "version": "1.0", "data": []}');
   mqttMessage.destinationName = topic_message;
@@ -151,15 +177,17 @@ function printStatusApps(payload){
   container.innerHTML= ''
   var elements_html=''
   elements_html+= '<p class="app-list-title">Checking Custom Application List....</p><br><table class="table-custom-apps">'
-  elements_html+=' <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th></thead><tbody>'
+  elements_html+=' <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th><th>Memory</th></thead><tbody>'
   
   payload.forEach(item => {
     var custom_app= item["data"][0]["value"].toString().replace("checkpt/","")
     var version_app= item["data"][1]["value"].toString()
     var status_app= item["data"][2]["value"].toString()
+    var memory= ((parseFloat(item["data"][3]["value"][0].toString()))/1000000).toFixed(2)
     var cpu= parseFloat(item["data"][4]["value"].toString()).toFixed(2)
+    
 
-    elements_html+='<tr><td>'+custom_app+'</td><td>'+version_app+'</td><td>'+status_app+'</td><td>'+cpu+'%</td></tr>'
+    elements_html+='<tr><td>'+custom_app+'</td><td>'+version_app+'</td><td>'+status_app+'</td><td>'+cpu+' %</td><td>'+memory+' mb</td></tr>'
   });
 
   elements_html+='</tbody></table>'
@@ -196,16 +224,12 @@ function setSaveApplicattions(){
   })
  
   message+=']}]}'
-  if(cont_custom_apps>0){
-    alert(message)
-    var mqttMessage = new Paho.MQTT.Message(message);
-    mqttMessage.destinationName = topic_message;
-    mqttClient.send(mqttMessage);
-    alert('Apps updated')
-  }
-  else{
-    alert('Please, select at least one custom application')
-  }
+  alert(message)
+  var mqttMessage = new Paho.MQTT.Message(message);
+  mqttMessage.destinationName = topic_message;
+  mqttClient.send(mqttMessage);
+  alert('Apps updated')
+  
 }
 
 
@@ -214,9 +238,12 @@ window.addEventListener('DOMContentLoaded', () => {
     loadActiveApps().then(loadVersionsFile);
     connectMQTT()
     document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
-    // document.getElementById("download-button").addEventListener("click", downloadConfig);
-    //document.getElementById("upload-button").addEventListener("click", uploadConfig);
+    document.getElementById("download-button").addEventListener("click", downloadConfig);
+    document.getElementById("upload-button").addEventListener("click", uploadConfig);
     document.getElementById("list-apps-button").addEventListener("click", getlistCustomApps);
     document.getElementById("clear-apps-button").addEventListener("click", clearlistCustomApps);
     document.getElementById("apply-button").addEventListener("click", setSaveApplicattions);
 });
+
+
+//window.setInterval(getlistCustomApps, 6000)

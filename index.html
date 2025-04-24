@@ -39,38 +39,47 @@
                                     <div class="pf-l-flex pf-m-align-items-center">
                                         <div class="pf-c-card__body"> 
                                             <div class="pf-l-stack__item">
+                                                <div class="header-container">
+                                                    <div class="buttons-container">
+                                                        <p>Config Files</p>
+                                                        <button class="pf-c-button pf-m-primary" id="download-button">Download</button>
+                                                        <button class="pf-c-button pf-m-primary" id="upload-button">Upload</button>
+                                                    </div>
 
-                                                <div class="button-refresh-box">
-                                                    <button class="pf-c-button pf-m-plain" id="refresh-button" aria-label="Refresh">
-                                                        <!-- <button class="pf-c-button pf-m-plain" id="refresh-button" aria-label="Refresh"> -->
-                                                            <svg class="icon-refresh" xmlns="http://www.w3.org/2000/svg"
-                                                                 fill="none" viewBox="0 0 24 24"
-                                                                 stroke-width="1.5" stroke="currentColor">
-                                                              <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M19.5 12c0-1.232-.046-2.453-.138-3.662
-                                                                       a4.006 4.006 0 0 0-3.7-3.7
-                                                                       48.678 48.678 0 0 0-7.324 0
-                                                                       a4.006 4.006 0 0 0-3.7 3.7
-                                                                       c-.017.22-.032.441-.046.662
-                                                          
-                                                                       M19.5 12l3-3m-3 3-3-3
-                                                          
-                                                                       m-12 3c0 1.232.046 2.453.138 3.662
-                                                                       a4.006 4.006 0 0 0 3.7 3.7
-                                                                       48.656 48.656 0 0 0 7.324 0
-                                                                       a4.006 4.006 0 0 0 3.7-3.7
-                                                                       c.017-.22.032-.441.046-.662
-                                                          
-                                                                       M4.5 12l3 3m-3-3-3 3" />
-                                                            </svg>
-                                                          <!-- </button> -->
-                                                          
-
-                                                    </button>
-                                                  </div>
+                                                    <div class="button-refresh-box">
+                                                        <button class="pf-c-button pf-m-primary" id="refresh-button" aria-label="Refresh">
+                                                            <a class="button-refresh-title">Refresh</a>
+                                                                <svg class="icon-refresh" xmlns="http://www.w3.org/2000/svg"
+                                                                     fill="none" viewBox="0 0 24 24"
+                                                                     stroke-width="1.5" stroke="currentColor">
+                                                                  <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M19.5 12c0-1.232-.046-2.453-.138-3.662
+                                                                           a4.006 4.006 0 0 0-3.7-3.7
+                                                                           48.678 48.678 0 0 0-7.324 0
+                                                                           a4.006 4.006 0 0 0-3.7 3.7
+                                                                           c-.017.22-.032.441-.046.662
+                                                              
+                                                                           M19.5 12l3-3m-3 3-3-3
+                                                              
+                                                                           m-12 3c0 1.232.046 2.453.138 3.662
+                                                                           a4.006 4.006 0 0 0 3.7 3.7
+                                                                           48.656 48.656 0 0 0 7.324 0
+                                                                           a4.006 4.006 0 0 0 3.7-3.7
+                                                                           c.017-.22.032-.441.046-.662
+                                                              
+                                                                           M4.5 12l3 3m-3-3-3 3" />
+                                                                </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                
+                                                
 
                                                 <div class="pf-l-stack">
-                                                    <table>
+                                                    <div class="loader-1" id="loader-1">
+                                                
+                                                    </div>
+                                                    <table id="table-apps" class="invisible">
                                                         <thead>
                                                             <th class="cell-status">Status</th>
                                                             <th class="cell-app">Custom App</th>
@@ -113,7 +122,7 @@
                                                    
 
                                                 </div>
-                                                <button class="pf-c-button pf-m-primary" id="apply-button">Submit</button>
+                                                <button class="pf-c-button pf-m-primary invisible-hidden" id="apply-button">Submit</button>
                                             </div>
                                         </div>
                                     </div>
@@ -140,7 +149,14 @@
                                             </div>
                                             
                                             <div id="app-list-result" class="pf-c-list">
-                                                
+                                                <!-- <p class="app-list-title">Checking Custom Application List....</p><br>
+                                                <table class="table-custom-apps">
+                                                    <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th></thead>
+                                                    <tbody>
+                                                        <tr><td>Onvif-Custom-Application</td><td>v2.0.3-beta.21</td><td>running</td><td>53.2%</td></tr>
+                                                        <tr><td>storeops-Custom-Application</td><td>v1.0.5</td><td>running</td><td>2.4%</td></tr>
+                                                    </tbody>
+                                                </tbody></table> -->
                                             </div>
                                          </section>
                                        </div>

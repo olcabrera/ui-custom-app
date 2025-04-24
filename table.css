@@ -199,11 +199,11 @@ h6{
 }
 
 .invisible{
-  display: none;
+  display: none !important;
 }
 
 .visible{
-  display: block;
+  display: block !important;
 }
 
 .images-buffer{
@@ -213,11 +213,9 @@ h6{
 }
 
 .button-refresh-box{
-  width: 100%;
-  display: flex;
-  justify-content: flex-end; 
-  align-items: left; 
-  margin-bottom: 10px;
+  position: relative;
+  float:right;
+  margin-top: 25px;
 }
 
 
@@ -288,4 +286,104 @@ h6{
 
 .cell-version{
   width: 25%;
+}
+
+
+
+
+
+
+
+
+
+.loader-1 {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  border-width: 0.5rem;
+  border-style: solid;
+  border-color: #dddddd;
+  display: inline-block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+.loader-1::after {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  border-width: 0.5rem;
+  border-style: solid;
+  border-color: transparent transparent transparent #0082dc;
+  content: "";
+  position: absolute;
+  top: -0.5rem;
+  left: -0.5rem;
+  animation: rotate 1s infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(135deg);
+  }
+  to {
+    transform: rotate(495deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 283;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@media (min-width: 48rem) {
+  .container {
+    flex-direction: row;
+  }
+}
+
+
+.invisible-hidden{
+  visibility: hidden;
+}
+
+.visible-hidden{
+  visibility: inherit;
+}
+
+
+.button-refresh-title{
+  color: #fff;
+    text-decoration: none;
+    position: relative;
+    bottom: 3px;
+}
+
+.buttons-container{
+  float: left;
+}
+
+.buttons-container p{
+  text-align: left;
+  font-size: 13px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+
+
+.header-container{
+  height: 90px;
+  margin-bottom: 15px;
+}
+
+
+.buttons-container button{
+  height: 40px;
+}
+
+#refresh-button{
+  height: 40px;
 }

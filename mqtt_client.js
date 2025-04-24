@@ -1,7 +1,7 @@
 
 function connectMQTT(){
 	var hostname = window.location.hostname;
-	//var hostname='ckp-0a9d90956aba.checkpoint-device.com'
+	//var hostname='ckp-ae4915f292de.checkpoint-device.com'
 	var port = 9001;
 	var clientId = "mqtt";
   
@@ -17,7 +17,7 @@ function Connect(){
 		onSuccess: Connected,
 		onFailure: ConnectionFailed,
 		keepAliveInterval: 20,
-		useSSL: false,	
+		useSSL: true,	
 	});
 }
   
