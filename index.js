@@ -173,30 +173,42 @@ function getlistCustomApps(){
 
 
 function printStatusApps(payload){
-  const container = document.getElementById("app-list-result");
-  container.innerHTML= ''
-  var elements_html=''
-  elements_html+= '<p class="app-list-title">Checking Custom Application List....</p><br><table class="table-custom-apps">'
-  elements_html+=' <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th><th>Memory</th></thead><tbody>'
+  var container_apps= document.getElementById('app-list-result');
   
-  payload.forEach(item => {
-    var custom_app= item["data"][0]["value"].toString().replace("checkpt/","")
-    var version_app= item["data"][1]["value"].toString()
-    var status_app= item["data"][2]["value"].toString()
-    var memory= ((parseFloat(item["data"][3]["value"][0].toString()))/1000000).toFixed(2)
-    var cpu= parseFloat(item["data"][4]["value"].toString()).toFixed(2)
+  var custom_app= payload["data"][0]["value"].toString().replace("checkpt/","")
+  var version_app= payload["data"][1]["value"].toString()
+  var status_app= payload["data"][2]["value"].toString()
+  var memory= ((parseFloat(payload["data"][3]["value"][0].toString()))/1000000).toFixed(2)
+  var cpu= parseFloat(payload["data"][4]["value"].toString()).toFixed(2)
     
+  const tbodyRef = document.getElementById('table-custom-apps').getElementsByTagName('tbody')[0];
+  const newRow = tbodyRef.insertRow();
+  for(a=1; a<=5; a++){
 
-    elements_html+='<tr><td>'+custom_app+'</td><td>'+version_app+'</td><td>'+status_app+'</td><td>'+cpu+' %</td><td>'+memory+' mb</td></tr>'
-  });
+    var textInCell=""
+    if(a==1){textInCell=custom_app}
+    else if(a==2){textInCell= version_app}
+    else if(a==3){textInCell= status_app}
+    else if(a==4){textInCell= cpu}
+    else if(a==5){textInCell= memory}
 
-  elements_html+='</tbody></table>'
-  container.innerHTML= elements_html
+    const newCell = newRow.insertCell();
+    const cellText = document.createTextNode(textInCell);
+    newCell.appendChild(cellText);
+  }
+
+  
+  container_apps.classList.remove("invisible");
+  container_apps.classList.add("visible");
+
 }
 
 function clearlistCustomApps(){
-  const container = document.getElementById("app-list-result");
-  container.innerHTML= ''
+  var container_apps= document.getElementById('app-list-result');
+  
+  $("#body-custom-apps tr").remove();
+  container_apps.classList.remove("visible");
+  container_apps.classList.add("invisible"); 
 }
 
 function setSaveApplicattions(){
