@@ -292,6 +292,22 @@ h6{
 
 
 
+.cell-app-dw{
+  width: 45%;
+}
+
+.cell-version-dw{
+  width: 20%;
+}
+
+.cell-status-dw{
+  width: 35%;
+}
+
+
+
+
+
 
 
 
@@ -386,4 +402,53 @@ h6{
 
 #refresh-button{
   height: 40px;
+}
+
+
+.download-title{
+  margin-bottom: 20px;
+}
+
+
+.cell-progress{
+  display: flex;
+  align-items: center;
+}
+
+.progress-bar{
+  height: 40px;
+}
+
+.progress-title{
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.error-circle{
+  width: 100px;
+  height: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 8px solid #0082dc;
+  border-radius: 50%;
+  display: flex;
+}
+
+.error-circle h1{
+  position: relative;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 50px;
+  color:#93979a;
+}
+
+.error-message-ui h6{
+  margin-top: 20px;
+}
+
+.error-message-ui pre{
+  margin-top: 20px;
 }

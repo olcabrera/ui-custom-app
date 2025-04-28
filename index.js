@@ -1,6 +1,7 @@
 
 const versions_file = "/var/environment/custom_app_manager/custom_apps/versions.txt"
 const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.json";
+custom_apps_download=[]
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -28,7 +29,7 @@ async function loadVersionsFile() {
         //content='692a2da45cd861c67a54cde1d0ae00be  ./storeops-custom-application/storeops-custom-application:v2.0.3-beta.21'
         console.log("Contenido leído desde archivo:", content);
         processFile(content);
-        alert("Custom Apps recharged succesfully.");
+        // alert("Custom Apps recharged succesfully.");
       })
       
       .catch(error => {
@@ -212,6 +213,17 @@ function clearlistCustomApps(){
 }
 
 function setSaveApplicattions(){
+  var container_dowload= document.getElementById('download-loader');
+  var error_message_ui= document.getElementById('error-message-ui');
+  var table_dowload= document.getElementById('table-download-apps');
+  
+  
+  table_dowload.classList.add("invisible")
+  error_message_ui.classList.add("invisible")
+  container_dowload.classList.remove("invisible")
+  $("#body-download-apps tr").remove();
+  custom_apps_download= []
+
   var topic_message= "command/cockpit_ui/custom_manager";
   var message='{"uuid": 1, "command_id": "set_custom_app_manager_app", "destination": "", "version": "1.0", "data": [{"key": "action", "type": "string", "value": ["set"]}, {"key": "custom_app", "type": "json", "value":['
   var cont_custom_apps=0
@@ -244,6 +256,53 @@ function setSaveApplicattions(){
   
 }
 
+
+function printStatusDownload(payload){
+  var container_dowload= document.getElementById('download-loader');
+  var table_dowload= document.getElementById('table-download-apps');
+  var error_message_ui= document.getElementById('error-message-ui');
+
+  container_dowload.classList.add("invisible")
+  table_dowload.classList.remove("invisible")
+  error_message_ui.classList.add("invisible")
+
+  var custom_app= payload["custom_app"]
+  var version_app= payload["version"]
+  var percent= parseInt(payload["percent"])
+
+  if(!custom_apps_download.includes(custom_app)){
+    custom_apps_download.push(custom_app)
+
+    const tbodyRef = document.getElementById('table-download-apps').getElementsByTagName('tbody')[0];
+    const newRow = tbodyRef.insertRow();
+
+    newRow.innerHTML = "<td>"+custom_app+"</td><td>"+version_app+"</td><td class='cell-progress'><progress class='progress-bar' id='progress-"+custom_app+"' value='"+percent+"' max='100'></progress><h5 class='progress-title' id='progress-title-"+custom_app+"'>"+percent+" %</h5></td>";
+  }
+  else{
+    var progress_custom_app= document.getElementById("progress-"+custom_app+"")
+    var progress_title_app= document.getElementById("progress-title-"+custom_app+"")
+
+    progress_custom_app.value= percent
+    progress_title_app.innerText= percent+ "%"
+  }
+}
+
+
+function printBackEndError(payload){
+  var error = payload["error"]
+  
+  var container_dowload= document.getElementById('download-loader');
+  var table_dowload= document.getElementById('table-download-apps');
+  var error_message_ui= document.getElementById('error-message-ui');
+  var back_end_error= document.getElementById('back_end_error');
+
+  
+  
+  container_dowload.classList.add("invisible")
+  table_dowload.classList.add("invisible")
+  error_message_ui.classList.remove("invisible")
+  back_end_error.innerText= error
+}
 
 
 window.addEventListener('DOMContentLoaded', () => {

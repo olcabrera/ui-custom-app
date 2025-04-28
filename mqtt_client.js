@@ -1,7 +1,11 @@
+var topic_subscription_resp = "command/cockpit_ui/resp";
+var topic_subscription_download = "command/cockpit_ui/download";
+var topic_subscription_errors = "command/cockpit_ui/error";
+
 
 function connectMQTT(){
-	var hostname = window.location.hostname;
-	//var hostname='ckp-ae4915f292de.checkpoint-device.com'
+	//var hostname = window.location.hostname;
+	var hostname='ckp-ae4915f292de.checkpoint-device.com'
 	var port = 9001;
 	var clientId = "mqtt";
   
@@ -22,9 +26,11 @@ function Connect(){
 }
   
 function Connected() {
-	var topic_subscription = "command/cockpit_ui/resp";
+	
 	alert("MQTT Connected");
-	mqttClient.subscribe(topic_subscription);
+	mqttClient.subscribe(topic_subscription_resp);
+	mqttClient.subscribe(topic_subscription_download);
+	mqttClient.subscribe(topic_subscription_errors);
 }
   
 function ConnectionFailed(res) {
@@ -42,7 +48,13 @@ function MessageArrived(message) {
 	const topic = message.destinationName;
 	var payload= JSON.parse(message.payloadString);
 	console.log("payload:" +payload +"from topic:" +topic)
-	if(topic == "command/cockpit_ui/resp"){
+	if(topic == topic_subscription_resp){
 		printStatusApps(payload)
+	}
+	else if(topic == topic_subscription_download){
+		printStatusDownload(payload)
+	}
+	else if(topic == topic_subscription_errors){
+		printBackEndError(payload)
 	}
 }

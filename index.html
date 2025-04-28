@@ -193,8 +193,36 @@
                                <article id="adu-provision" class="pf-c-card">
                                    <div class="pf-l-flex pf-m-align-items-center">
                                        <div class="pf-c-card__body"> 
-                                        <section class="pf-c-page__main-section pf-m-light">
+                                        <section class="pf-c-page__main-section pf-m-light " id="download-section">
+                                            <div class="invisible" id="download-loader">
+                                                <h4 class="download-title">Waiting for the download of custom apps</h4>
+                                                <div class="loader-1" id="loader-2">
+                                                
+                                                </div>
+                                            </div>
+
+                                            <div class="error-message-ui invisible" id="error-message-ui">
+                                                <div class="error-circle">
+                                                    <h1>X</h1>
+                                                </div>
+
+                                                <h6>Error downloading custom apps</h6>
+                                                <pre style="font-size: medium" id="back_end_error"></pre>
+                                            </div>
                                             
+
+
+                                            <table class="table-download-apps invisible" id="table-download-apps">
+                                                <thead>
+                                                    <th class="cell-app-dw">App</th>
+                                                    <th class="cell-version-dw">Version</th>
+                                                    <th class="cell-status-dw">Status</th>
+                                                </thead>
+                                                <tbody id="body-download-apps">
+
+                                                </tbody>
+                                            </table>
+
                                             
                                          </section>
                                        </div>
