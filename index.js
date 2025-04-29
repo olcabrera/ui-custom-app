@@ -28,7 +28,7 @@ async function loadVersionsFile() {
         //content='692a2da45cd861c67a54cde1d0ae00be  ./storeops-custom-application/storeops-custom-application:v2.0.3-beta.21'
         console.log("Contenido leído desde archivo:", content);
         processFile(content);
-        alert("Custom Apps recharged succesfully.");
+        alert("Custom Apps recharged successfully.");
       })
       
       .catch(error => {
@@ -148,33 +148,29 @@ async function downloadConfig() {
       chmod 644 /var/tmp/environment.zip
     `], { superuser: "try" });
 
-    console.log("✅ ZIP creado y permisos aplicados.");
+    console.log("Zip created");
 
     const file = cockpit.file("/var/tmp/environment.zip", { superuser: "try", binary: true });
     const fileContent = await file.read();
 
-    console.log("Aqui va todo bien")
-
     const uint8Array = new Uint8Array(fileContent);
-
-    console.log("Lectura de archivo correcta")
 
     const blob = new Blob([uint8Array], { type: "application/zip" });
     saveAs(blob, "environment.zip");
 
     await cockpit.spawn(['rm', '-f', '/var/tmp/environment.zip']);
 
-    console.log("✅ ZIP descargado en la máquina local.");
+    console.log("Zip downloaded");
 
     cockpit.spawn(["rm", "-f", "/var/tmp/environment.zip"], { superuser: "try" });
-    console.log("🧹 ZIP eliminado del servidor.");
+    console.log("Deleted zip in tmp directory");
 
     downloadButton.innerText = "Download";
     downloadButton.disabled = false;
 
   } catch (error) {
-    console.error("❌ Error durante la creación o descarga del ZIP:", error);
-    alert("Hubo un error. Revisa la consola.");
+    console.error("Error in downloading zip file:", error);
+    alert("Error in downloading zip file");
     downloadButton.innerText = "Download";
     downloadButton.disabled = false;
   }
@@ -198,7 +194,7 @@ async function uploadZIP(event) {
       await cockpit.spawn(['unzip', '-o', '/var/tmp/uploaded_environment.zip', '-d', '/var/environment'], { 
         superuser: 'try', 
         err: 'message',
-        output: (line) => console.log('🟢 unzip output:', line) });
+        output: (line) => console.log('unzip output:', line) });
       console.log('unzipped file on /var/environment.');
 
       await cockpit.spawn(['rm', '-f', '/var/tmp/uploaded_environment.zip'], { superuser: 'try' });
