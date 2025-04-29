@@ -134,34 +134,83 @@ function renderizarAplicaciones(apps) {
   }
 
 
-function downloadConfig() {
-  alert("Downloading config file...");
 
-  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/download-zip-config"])
-    .done(function (output) {
-      console.log("Response:", output);
-      alert("Config file uploaded successfully");
-    })
-    .fail(function (error) {
-      console.error("Error downloading config file:", error);
-      alert("Error in downloading config file");
-    });
+async function downloadConfig() {
+  const downloadButton = document.getElementById('download-button');
+
+  downloadButton.disabled = true;
+  downloadButton.innerText = "Creando ZIP...";
+
+  try {
+    await cockpit.spawn(["bash", "-c", `
+      cd /var/environment && \
+      zip -r /var/tmp/environment.zip . -x "custom_app_manager/*" && \
+      chmod 644 /var/tmp/environment.zip
+    `], { superuser: "try" });
+
+    console.log("✅ ZIP creado y permisos aplicados.");
+
+    const file = cockpit.file("/var/tmp/environment.zip", { superuser: "try", binary: true });
+    const fileContent = await file.read();
+
+    console.log("Aqui va todo bien")
+
+    const uint8Array = new Uint8Array(fileContent);
+
+    console.log("Lectura de archivo correcta")
+
+    const blob = new Blob([uint8Array], { type: "application/zip" });
+    saveAs(blob, "environment.zip");
+
+    await cockpit.spawn(['rm', '-f', '/var/tmp/environment.zip']);
+
+    console.log("✅ ZIP descargado en la máquina local.");
+
+    cockpit.spawn(["rm", "-f", "/var/tmp/environment.zip"], { superuser: "try" });
+    console.log("🧹 ZIP eliminado del servidor.");
+
+    downloadButton.innerText = "Download";
+    downloadButton.disabled = false;
+
+  } catch (error) {
+    console.error("❌ Error durante la creación o descarga del ZIP:", error);
+    alert("Hubo un error. Revisa la consola.");
+    downloadButton.innerText = "Download";
+    downloadButton.disabled = false;
+  }
 }
 
-function uploadConfig() {
-  alert("Uploading config file");
+async function uploadZIP(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      alert('Select a zip config file.');
+      return;
+    }
 
-  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/run-zip-upload"])
-    .done(function (output) {
-      console.log("Response:", output);
-      alert("Config file uploaded successfully");
-    })
-    .fail(function (error) {
-      console.error("Error uploading config file:", error);
-      alert("Error uploading config file");
-    });
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
 
+      const remoteFile = cockpit.file('/var/tmp/uploaded_environment.zip', { superuser: 'try', binary: true });
+      await remoteFile.replace(uint8Array);
+      console.log('Config file zip charged.');
+
+      await cockpit.spawn(['unzip', '-o', '/var/tmp/uploaded_environment.zip', '-d', '/var/environment'], { 
+        superuser: 'try', 
+        err: 'message',
+        output: (line) => console.log('🟢 unzip output:', line) });
+      console.log('unzipped file on /var/environment.');
+
+      await cockpit.spawn(['rm', '-f', '/var/tmp/uploaded_environment.zip'], { superuser: 'try' });
+      console.log('zip file deleted');
+      alert('Config file uploaded successfully')
+    } catch (error) {
+      console.error('Error while charging config file zip: ', error);
+      alert('Error while charging config file zip.');
+    }
 }
+
+
   
 function getlistCustomApps(){
   clearlistCustomApps()
@@ -249,13 +298,24 @@ function setSaveApplicattions(){
 window.addEventListener('DOMContentLoaded', () => {
     loadActiveApps().then(loadVersionsFile);
     connectMQTT()
+    const uploadButton = document.getElementById('upload-button');
+    const uploadInput = document.getElementById('uploadInput');
+
+    if (uploadInput) {
+      uploadInput.style.display = 'none';
+    }
+    if (uploadButton && uploadInput) {
+      uploadButton.onclick = () => {
+        uploadInput.value = '';
+        uploadInput.click(); 
+      };
+      uploadInput.onchange = uploadZIP;
+    }
+
     document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
     document.getElementById("download-button").addEventListener("click", downloadConfig);
-    document.getElementById("upload-button").addEventListener("click", uploadConfig);
     document.getElementById("list-apps-button").addEventListener("click", getlistCustomApps);
     document.getElementById("clear-apps-button").addEventListener("click", clearlistCustomApps);
     document.getElementById("apply-button").addEventListener("click", setSaveApplicattions);
+
 });
-
-
-//window.setInterval(getlistCustomApps, 6000)

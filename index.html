@@ -10,6 +10,7 @@
     <link href="inputs_designe.css" type="text/css" rel="stylesheet">
     <link href="table.css" type="text/css" rel="stylesheet">
     <script src="../base1/cockpit.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="files.js" type="text/javascript"></script>
     <script src="mqttws31.min.js"></script>
@@ -44,6 +45,7 @@
                                                         <p>Config Files</p>
                                                         <button class="pf-c-button pf-m-primary" id="download-button">Download</button>
                                                         <button class="pf-c-button pf-m-primary" id="upload-button">Upload</button>
+                                                        <input type="file" id="uploadInput" accept=".zip" style="display: none;">
                                                     </div>
 
                                                     <div class="button-refresh-box">
@@ -149,15 +151,6 @@
                                             </div>
                                             
                                             <div id="app-list-result" class="pf-c-list invisible">
-                                                <!-- <p class="app-list-title">Checking Custom Application List....</p><br>
-                                                <table class="table-custom-apps">
-                                                    <thead><th>App</th><th>Version</th><th>Status</th><th>CPU</th></thead>
-                                                    <tbody>
-                                                        <tr><td>Onvif-Custom-Application</td><td>v2.0.3-beta.21</td><td>running</td><td>53.2%</td></tr>
-                                                        <tr><td>storeops-Custom-Application</td><td>v1.0.5</td><td>running</td><td>2.4%</td></tr>
-                                                    </tbody>
-                                                </tbody></table> -->
-
                                                 <p class="app-list-title">Checking Custom Application List....</p><br>
                                                 <table class="table-custom-apps" id="table-custom-apps">
                                                     <thead>
