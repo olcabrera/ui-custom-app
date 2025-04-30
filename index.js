@@ -83,7 +83,21 @@ function loadActiveApps() {
         console.error("No se pudo cargar el estado actual:", err);
         estadoActual = [];
       });
-  }
+}
+
+
+function loadActiveAppsAndRefresh() {
+  return cockpit.file(active_file).read()
+    .then(content => {
+      estadoActual = JSON.parse(content);
+      console.log("Estado actual cargado:", estadoActual);
+      loadVersionsFile()
+    })
+    .catch(err => {
+      console.error("No se pudo cargar el estado actual:", err);
+      estadoActual = [];
+    });
+}
 
 
   
@@ -201,6 +215,14 @@ function renderizarAplicaciones(apps) {
       await cockpit.spawn(['rm', '-f', '/var/tmp/uploaded_environment.zip'], { superuser: 'try' });
       console.log('zip file deleted');
       alert('Config file uploaded successfully')
+ 
+      var topic_message= "command/request/custom/custom-app-manager/refresh-environment";
+      var mqttMessage = new Paho.MQTT.Message('{}');
+      mqttMessage.destinationName = topic_message;
+      mqttClient.send(mqttMessage);
+      console.log("mqtt restar sended")
+      loadActiveAppsAndRefresh()
+
     } catch (error) {
       console.error('Error while charging config file zip: ', error);
       alert('Error while charging config file zip.');
@@ -286,6 +308,7 @@ function clearlistCustomApps(){
 }
 
 function setSaveApplicattions(){
+  
   var container_dowload= document.getElementById('download-loader');
   var error_message_ui= document.getElementById('error-message-ui');
   var table_dowload= document.getElementById('table-download-apps');
@@ -397,7 +420,7 @@ function printBackEndError(payload){
 
 
 window.addEventListener('DOMContentLoaded', () => {
-    loadActiveApps().then(loadVersionsFile);
+    loadActiveApps(false).then(loadVersionsFile);
     connectMQTT()
 
     const uploadButton = document.getElementById('upload-button');
@@ -414,7 +437,7 @@ window.addEventListener('DOMContentLoaded', () => {
       uploadInput.onchange = uploadZIP;
     }
 
-    document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
+    document.getElementById('refresh-button').addEventListener('click', loadActiveAppsAndRefresh);
     document.getElementById("download-button").addEventListener("click", downloadConfig);
     document.getElementById("list-apps-button").addEventListener("click", getlistCustomApps);
     document.getElementById("clear-apps-button").addEventListener("click", clearlistCustomApps);
