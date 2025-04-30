@@ -144,7 +144,7 @@ async function downloadConfig() {
   try {
     await cockpit.spawn(["bash", "-c", `
       cd /var/environment && \
-      zip -r /var/tmp/environment.zip . -x "custom_app_manager/*" && \
+      zip -r /var/tmp/environment.zip . -x "custom_app_manager/conf/custom_app_active.json" && \
       chmod 644 /var/tmp/environment.zip
     `], { superuser: "try" });
 
