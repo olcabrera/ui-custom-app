@@ -2,6 +2,7 @@
 const versions_file = "/var/environment/custom_app_manager/custom_apps/versions.txt"
 const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.json";
 custom_apps_download=[]
+custom_apps_status=[]
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -135,33 +136,75 @@ function renderizarAplicaciones(apps) {
   }
 
 
-function downloadConfig() {
-  alert("Downloading config file...");
+  async function downloadConfig() {
+    const downloadButton = document.getElementById('download-button');
+  
+    downloadButton.disabled = true;
+    downloadButton.innerText = "Creando ZIP...";
+  
+    try {
+      await cockpit.spawn(["bash", "-c", `
+        cd /var/environment && \
+        zip -r /var/tmp/environment.zip . -x "custom_app_manager/conf/custom_app_active.json" && \
+        chmod 644 /var/tmp/environment.zip
+      `], { superuser: "try" });
+  
+      console.log("Zip created");
+  
+      const file = cockpit.file("/var/tmp/environment.zip", { superuser: "try", binary: true });
+      const fileContent = await file.read();
+  
+      const uint8Array = new Uint8Array(fileContent);
+  
+      const blob = new Blob([uint8Array], { type: "application/zip" });
+      saveAs(blob, "environment.zip");
+  
+      await cockpit.spawn(['rm', '-f', '/var/tmp/environment.zip'], { superuser: "try" });
+  
+      console.log("Zip downloaded");
+  
+      //cockpit.spawn(["rm", "-f", "/var/tmp/environment.zip"], { superuser: "try" });
+      console.log("Deleted zip in tmp directory");
+  
+      downloadButton.innerText = "Download";
+      downloadButton.disabled = false;
+  
+    } catch (error) {
+      console.error("Error in downloading zip file:", error);
+      alert("Error in downloading zip file");
+      downloadButton.innerText = "Download";
+      downloadButton.disabled = false;
+    }
+  }
 
-  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/download-zip-config"])
-    .done(function (output) {
-      console.log("Response:", output);
-      alert("Config file uploaded successfully");
-    })
-    .fail(function (error) {
-      console.error("Error downloading config file:", error);
-      alert("Error in downloading config file");
-    });
-}
+  async function uploadZIP(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      alert('Select a zip config file.');
+      return;
+    }
 
-function uploadConfig() {
-  alert("Uploading config file");
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
 
-  cockpit.spawn(["curl", "-X", "POST", "http://localhost:8005/run-zip-upload"])
-    .done(function (output) {
-      console.log("Response:", output);
-      alert("Config file uploaded successfully");
-    })
-    .fail(function (error) {
-      console.error("Error uploading config file:", error);
-      alert("Error uploading config file");
-    });
+      const remoteFile = cockpit.file('/var/tmp/uploaded_environment.zip', { superuser: 'try', binary: true });
+      await remoteFile.replace(uint8Array);
+      console.log('Config file zip charged.');
 
+      await cockpit.spawn(['unzip', '-o', '/var/tmp/uploaded_environment.zip', '-d', '/var/environment'], { 
+        superuser: 'try', 
+        err: 'message',
+        output: (line) => console.log('unzip output:', line) });
+      console.log('unzipped file on /var/environment.');
+
+      await cockpit.spawn(['rm', '-f', '/var/tmp/uploaded_environment.zip'], { superuser: 'try' });
+      console.log('zip file deleted');
+      alert('Config file uploaded successfully')
+    } catch (error) {
+      console.error('Error while charging config file zip: ', error);
+      alert('Error while charging config file zip.');
+    }
 }
   
 function getlistCustomApps(){
@@ -175,36 +218,66 @@ function getlistCustomApps(){
 
 function printStatusApps(payload){
   var container_apps= document.getElementById('app-list-result');
-  
-  var custom_app= payload["data"][0]["value"].toString().replace("checkpt/","")
-  var version_app= payload["data"][1]["value"].toString()
-  var status_app= payload["data"][2]["value"].toString()
-  var memory= ((parseFloat(payload["data"][3]["value"][0].toString()))/1000000).toFixed(2)
-  var cpu= parseFloat(payload["data"][4]["value"].toString()).toFixed(2)
+  var data= payload["data"]
+  if(data!=null){
+    var custom_app= payload["data"][0]["value"].toString().replace("checkpt/","")
+    var version_app= payload["data"][1]["value"].toString()
+    var status_app= payload["data"][2]["value"].toString()
+    var memory= ((parseFloat(payload["data"][3]["value"][0].toString()))/1000000).toFixed(2)
+    var cpu= parseFloat(payload["data"][4]["value"].toString()).toFixed(2)
     
-  const tbodyRef = document.getElementById('table-custom-apps').getElementsByTagName('tbody')[0];
-  const newRow = tbodyRef.insertRow();
-  for(a=1; a<=5; a++){
+    if(!custom_apps_status.includes(custom_app)){
+      custom_apps_status.push(custom_app)
+      
+      const tbodyRef = document.getElementById('table-custom-apps').getElementsByTagName('tbody')[0];
+      const newRow = tbodyRef.insertRow();
 
-    var textInCell=""
-    if(a==1){textInCell=custom_app}
-    else if(a==2){textInCell= version_app}
-    else if(a==3){textInCell= status_app}
-    else if(a==4){textInCell= cpu}
-    else if(a==5){textInCell= memory}
 
-    const newCell = newRow.insertCell();
-    const cellText = document.createTextNode(textInCell);
-    newCell.appendChild(cellText);
-  }
+      
+      for(a=1; a<=5; a++){
 
+        var textInCell=""
+        if(a==1){textInCell=custom_app}
+        else if(a==2){textInCell= version_app}
+        else if(a==3){textInCell= status_app}
+        else if(a==4){textInCell= cpu}
+        else if(a==5){textInCell= memory}
+
+        var new_row= "<td id='status-name-"+custom_app+"'>"+custom_app+"</td>"
+        new_row+= "<td id='status-version-"+custom_app+"'>"+version_app+"</td>"
+        new_row+= "<td id='status-status-"+custom_app+"'>"+status_app+"</td>"
+        new_row+= "<td id='status-cpu-"+custom_app+"'>"+cpu+"</td>"
+        new_row+= "<td id='status-memory-"+custom_app+"'>"+memory+"</td>"
+        newRow.innerHTML = new_row;
+        
+      }
+    }
+    else{
+      var status_name_app= document.getElementById("status-name-"+custom_app+"")
+      var status_version_app= document.getElementById("status-version-"+custom_app+"")
+      var status_status_app= document.getElementById("status-status-"+custom_app+"")
+      var status_cpu_app= document.getElementById("status-cpu-"+custom_app+"")
+      var status_memory_app= document.getElementById("status-memory-"+custom_app+"")
+      
+
+
+      status_name_app.innerText= custom_app
+      status_version_app.innerText= version_app
+      status_status_app.innerText= status_app
+      status_cpu_app.innerText= cpu
+      status_memory_app.innerText= memory
+
+    }
+
+    
+    container_apps.classList.remove("invisible");
+    container_apps.classList.add("visible");
   
-  container_apps.classList.remove("invisible");
-  container_apps.classList.add("visible");
-
+  }
 }
 
 function clearlistCustomApps(){
+  custom_apps_status= []
   var container_apps= document.getElementById('app-list-result');
   
   $("#body-custom-apps tr").remove();
@@ -269,21 +342,39 @@ function printStatusDownload(payload){
   var custom_app= payload["custom_app"]
   var version_app= payload["version"]
   var percent= parseInt(payload["percent"])
+  var status= payload["status"]
 
   if(!custom_apps_download.includes(custom_app)){
     custom_apps_download.push(custom_app)
 
     const tbodyRef = document.getElementById('table-download-apps').getElementsByTagName('tbody')[0];
     const newRow = tbodyRef.insertRow();
-
-    newRow.innerHTML = "<td>"+custom_app+"</td><td>"+version_app+"</td><td class='cell-progress'><progress class='progress-bar' id='progress-"+custom_app+"' value='"+percent+"' max='100'></progress><h5 class='progress-title' id='progress-title-"+custom_app+"'>"+percent+" %</h5></td>";
+    var new_row= ""
+    if(percent>0){
+      new_row+="<td>"+custom_app+"</td><td>"+version_app+"</td><td class='cell-progress'><progress class='progress-bar' id='progress-"+custom_app+"' value='"+percent+"' max='100'></progress><h5 class='progress-title' id='progress-title-"+custom_app+"'>"+percent+" %</h5></td>";
+    }
+    else{
+      new_row+="<td>"+custom_app+"</td><td>"+version_app+"</td><td class='cell-progress'><progress class='progress-bar invisible' id='progress-"+custom_app+"' value='"+percent+"' max='100'></progress><h5 class='progress-title progress-title-error' id='progress-title-"+custom_app+"'>"+status+"</h5></td>";
+    }
+    
+    
+    newRow.innerHTML = new_row 
   }
   else{
     var progress_custom_app= document.getElementById("progress-"+custom_app+"")
     var progress_title_app= document.getElementById("progress-title-"+custom_app+"")
 
-    progress_custom_app.value= percent
-    progress_title_app.innerText= percent+ "%"
+    if(percent>0){
+      progress_custom_app.value= percent
+      progress_title_app.innerText= percent+ "%"
+      progress_custom_app.classList.remove("invisible")
+      progress_title_app.classList.remove("progress-title-error")
+    }
+    else{
+      progress_custom_app.classList.add("invisible")
+      progress_title_app.classList.add("progress-title-error")
+      progress_title_app.innerText= status +", trying later"
+    }
   }
 }
 
@@ -308,9 +399,23 @@ function printBackEndError(payload){
 window.addEventListener('DOMContentLoaded', () => {
     loadActiveApps().then(loadVersionsFile);
     connectMQTT()
+
+    const uploadButton = document.getElementById('upload-button');
+    const uploadInput = document.getElementById('uploadInput');
+
+    if (uploadInput) {
+      uploadInput.style.display = 'none';
+    }
+    if (uploadButton && uploadInput) {
+      uploadButton.onclick = () => {
+        uploadInput.value = '';
+        uploadInput.click(); 
+      };
+      uploadInput.onchange = uploadZIP;
+    }
+
     document.getElementById('refresh-button').addEventListener('click', loadVersionsFile);
     document.getElementById("download-button").addEventListener("click", downloadConfig);
-    document.getElementById("upload-button").addEventListener("click", uploadConfig);
     document.getElementById("list-apps-button").addEventListener("click", getlistCustomApps);
     document.getElementById("clear-apps-button").addEventListener("click", clearlistCustomApps);
     document.getElementById("apply-button").addEventListener("click", setSaveApplicattions);

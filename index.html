@@ -15,6 +15,7 @@
     <script src="mqttws31.min.js"></script>
     <script src="mqtt_client.js"></script>
     <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   </head>
   <body class="pf-m-redhat-font">
     <div class="ct-page-fill">
@@ -44,6 +45,7 @@
                                                         <p>Config Files</p>
                                                         <button class="pf-c-button pf-m-primary" id="download-button">Download</button>
                                                         <button class="pf-c-button pf-m-primary" id="upload-button">Upload</button>
+                                                        <input type="file" id="uploadInput" accept=".zip" style="display: none;">
                                                     </div>
 
                                                     <div class="button-refresh-box">
@@ -164,8 +166,8 @@
                                                         <th>App</th>
                                                         <th>Version</th>
                                                         <th>Status</th>
-                                                        <th>CPU</th>
-                                                        <th>Memory</th>
+                                                        <th>CPU %</th>
+                                                        <th>Memory (MB)</th>
                                                     </thead>
                                                     <tbody id="body-custom-apps">
 
@@ -185,9 +187,9 @@
 
 
                      <input id="tab-three" type="radio" name="grp" />
-                      <label for="tab-three">Downloaded</label>
+                      <label for="tab-three">Downloading</label>
                       <div class="pdp-tab-content">
-                         <h1>Downloaded</h1>
+                         <h1>Downloading</h1>
                          <section class="pf-c-page__main-section">
                            <div class="pf-l-gallery pf-m-gutter">
                                <article id="adu-provision" class="pf-c-card">
