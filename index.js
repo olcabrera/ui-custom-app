@@ -1,6 +1,6 @@
 
 const versions_file = "/var/environment/custom_app_manager/custom_apps/versions.txt"
-const active_file = "/var/environment/custom_app_manager/conf/custom_app_active.json";
+const active_file = "/var/environment/custom_app_manager/conf/custom_app_selected.json";
 custom_apps_download=[]
 custom_apps_status=[]
 
